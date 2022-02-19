@@ -8,6 +8,7 @@ function! s:bitbucket_url(opts, ...) abort
   endif
   let path = substitute(a:opts.path, '^/', '', '')
   let domain_pattern = exists('g:fubitive_domain_pattern') ? g:fubitive_domain_pattern : 'bitbucket\.org'
+  let projects_path = exists('g:fubitive_projects_path') ? g:fubitive_projects_path : '/projects/'
   let domains = exists('g:fugitive_bitbucket_domains') ? g:fugitive_bitbucket_domains : []
   for domain in domains
     let domain_pattern .= '\|' . escape(split(domain, '://')[-1], '.')
@@ -24,7 +25,7 @@ function! s:bitbucket_url(opts, ...) abort
   endif
   let root = is_cloud
         \ ? 'https://' . substitute(repo, ':', '/', '')
-        \ : 'https://' . domain . '/projects/' . project . '/repos/' . repo
+        \ : 'https://' . domain . projects_path . project . '/repos/' . repo
   if path =~# '^\.git/refs/heads/'
     return root . '/commits/' . path[16:-1]
   elseif path =~# '^\.git/refs/tags/'
